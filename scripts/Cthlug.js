@@ -160,28 +160,28 @@ Cthlug.prototype.updatePosition = function (newx, dt) {
     var i, olddirection, building, x, y, touch, rettouch;
     switch (this.direction) {
         case 1:
-            this.deltav.x = -.2;
-            this.deltav.y = 1;
+            this.deltav.x = -.4;
+            this.deltav.y = 2;
             break;
         case 2:
-            this.deltav.x = -.2;
-            this.deltav.y = -.2;
+            this.deltav.x = -.4;
+            this.deltav.y = -.4;
             break;
         case 3:
-            this.deltav.x = .2;
-            this.deltav.y = .2;
+            this.deltav.x = .4;
+            this.deltav.y = .4;
             break;
         case 4:
-            this.deltav.x = .2;
-            this.deltav.y = 1;
+            this.deltav.x = .4;
+            this.deltav.y = 2;
             break;
         case 5:
-            this.deltav.x = .2;
-            this.deltav.y = -.2;
+            this.deltav.x = .4;
+            this.deltav.y = -.4;
             break;
         case 6:
-            this.deltav.x = -.2;
-            this.deltav.y = .2;
+            this.deltav.x = -.4;
+            this.deltav.y = .4;
             break;
         case 7:
             this.deltav.x = 0;

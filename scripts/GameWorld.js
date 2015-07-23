@@ -89,7 +89,15 @@ function GameWorld(stage, renderer, game) {
     this.respawntext.position.x = 480 - (this.respawntext.width / 2 );
     this.respawntext.position.y = this.moon.position.y + this.moon.height + 5;
     this.respawntext.alpha = 0;
+
+    this.lastmantext = new PIXI.Text("Waiting for rescue ships to take on survivors!",
+                                     {font: "20px Play", fill: "white", align: "left"});
+    this.lastmantext.position.x = 480 - (this.lastmantext.width / 2 );
+    this.lastmantext.position.y = this.moon.position.y + this.moon.height + 25;
+    this.lastmantext.alpha = 0;
+
     this.stage.addChild(this.respawntext);
+    this.stage.addChild(this.lastmantext);
     this.stage.addChild(this.gamepercentage);
 }
 
@@ -161,7 +169,7 @@ GameWorld.prototype.addTower = function (x) {
 GameWorld.prototype.buildCity = function () {
     "use strict";
     var x = 0, towers = 0, building, buildingarr = ["building01x2.png", "building02x1.png", "building03x1.png"],
-        buildingtype, man, manflying, manx, many;
+        buildingtype, man, manflying, manx, many, chanceman = .25+(this.wave/100);
     while (x < GameWorld.WORLDMAX - 160) {
         if (x > .25 * GameWorld.WORLDMAX && towers === 0) {
             // tower
@@ -192,7 +200,7 @@ GameWorld.prototype.buildCity = function () {
             else {
                 x += 160;
             }
-            if (Math.random() < .25) {
+            if (Math.random() < chanceman) {
                 manx = building.worldx + Math.floor(building.width / 2) - 6;
                 many = building.worldy - 24;
                 man = new ManObject(this, GameWorld.WORLDMAX, 540, 960, 540, manx, many);
@@ -313,12 +321,15 @@ GameWorld.prototype.endGameTick = function (e) {
     if (!alive) {
         for (i = 0; i < this.ships.length; i++) {
             if (!this.ships[i].isClear()) {
+                if (this.lastmantext.alpha<=0) { this.lastmantext.alpha=1.1; }
+                this.lastmantext.alpha-=.15;
                 alive = true;
                 break;
             }
         }
     }
     if (alive) return;
+    this.lastmantext.alpha=0;
     for (i = 0; i < this.ships.length; i++) {
         this.ships[i].takeoff();
     }
@@ -386,7 +397,7 @@ GameWorld.prototype.cthortalTick = function (e) {
             //cthing = new Cthing(this, this.stage, GameWorld.WORLDMAX, 540, 960, 540, x, y);
             if (this.wave < 5) {
                 cthing = new Cthing(this, this.stage, GameWorld.WORLDMAX, 540, 960, 540, x, y);
-            } else if (this.wave >= 5 && this.wave < 10) {
+            } else if (this.wave >= 5 && this.wave < 8) {
                 if (Math.random() < .75) {
                     cthing = new Cthing(this, this.stage, GameWorld.WORLDMAX, 540, 960, 540, x, y);
                 } else {
@@ -394,9 +405,9 @@ GameWorld.prototype.cthortalTick = function (e) {
                 }
             } else {
                 chances = Math.random();
-                if (chances < .65) {
+                if (chances < .55) {
                     cthing = new Cthing(this, this.stage, GameWorld.WORLDMAX, 540, 960, 540, x, y);
-                } else if (chances >= .65 && chances < .90) {
+                } else if (chances >= .55 && chances < .85) {
                     cthing = new Cthod(this, this.stage, GameWorld.WORLDMAX, 540, 960, 540, x, y);
                 } else {
                     cthing = new Cthomber(this, this.stage, GameWorld.WORLDMAX, 540, 960, 540, x, y);
@@ -782,11 +793,8 @@ GameWorld.prototype.isCollidedPoint = function (test1, x, y, ignoreinvisible) {
         }
         return false;
     }
-    if (x >= test1.worldx && x <= test1.worldx + test1.width &&
-        y >= test1.worldy && y <= test1.worldy + test1.height) {
-        return true;
-    }
-    return false;
+    return (x >= test1.worldx && x <= test1.worldx + test1.width &&
+        y >= test1.worldy && y <= test1.worldy + test1.height);
 };
 
 GameWorld.prototype.isCollidedCoords = function (test1, x, y, width, height, ignoreinvisible) {

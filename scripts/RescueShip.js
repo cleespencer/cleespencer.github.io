@@ -45,7 +45,6 @@ function RescueShip(world, stage, worldwidth, worldheight, viewwidth, viewheight
     this.particlesystem = new PARTSYS.ParticleSystem();
     this.g = new PIXI.Graphics();
     this.addChild(this.g);
-
 }
 
 RescueShip.constructor = RescueShip;
